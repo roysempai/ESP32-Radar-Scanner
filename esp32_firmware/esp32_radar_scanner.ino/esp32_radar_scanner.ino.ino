@@ -2,8 +2,8 @@
 #include <WebServer.h>
 #include <ESP32Servo.h>
 
-const char* ssid = "Iyad";
-const char* password = "12345679";
+const char* ssid = "YOUR_ACTUAL_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
 
 WebServer server(80);
 

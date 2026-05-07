@@ -15,25 +15,25 @@ const radarRadius = 420;
 let trail = [];
 let detections = [];
 
-function drawRadar(){
+function drawRadar() {
 
     ctx.fillStyle = "rgba(0,0,0,0.15)";
-    ctx.fillRect(0,0,900,650);
+    ctx.fillRect(0, 0, 900, 650);
 
     drawGrid();
     drawSweep();
     drawObjects();
 }
 
-function drawGrid(){
+function drawGrid() {
 
     ctx.strokeStyle = "#00ff00";
     ctx.lineWidth = 2;
 
-    for(let r=80; r<=400; r+=80){
+    for (let r = 80; r <= 400; r += 80) {
 
         ctx.beginPath();
-        ctx.arc(centerX,centerY,r,Math.PI,2*Math.PI);
+        ctx.arc(centerX, centerY, r, Math.PI, 2 * Math.PI);
         ctx.stroke();
 
         ctx.fillStyle = "#00ff00";
@@ -42,7 +42,7 @@ function drawGrid(){
         ctx.fillText((r / 4) + " cm", centerX + r - 40, centerY - 10);
     }
 
-    for(let a=0; a<=180; a+=15){
+    for (let a = 0; a <= 180; a += 15) {
 
         let rad = a * Math.PI / 180;
 
@@ -50,28 +50,28 @@ function drawGrid(){
         let y = centerY - radarRadius * Math.sin(rad);
 
         ctx.beginPath();
-        ctx.moveTo(centerX,centerY);
-        ctx.lineTo(x,y);
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(x, y);
         ctx.stroke();
 
         ctx.fillText(a + "°", x - 10, y - 10);
     }
 }
 
-function drawSweep(){
+function drawSweep() {
 
     let rad = angle * Math.PI / 180;
 
     let x = centerX + radarRadius * Math.cos(rad);
     let y = centerY - radarRadius * Math.sin(rad);
 
-    trail.push({x,y});
+    trail.push({ x, y });
 
-    if(trail.length > 25){
+    if (trail.length > 25) {
         trail.shift();
     }
 
-    for(let i=0;i<trail.length;i++){
+    for (let i = 0; i < trail.length; i++) {
 
         let alpha = i / trail.length;
 
@@ -79,8 +79,8 @@ function drawSweep(){
         ctx.lineWidth = 5;
 
         ctx.beginPath();
-        ctx.moveTo(centerX,centerY);
-        ctx.lineTo(trail[i].x,trail[i].y);
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(trail[i].x, trail[i].y);
         ctx.stroke();
     }
 
@@ -91,16 +91,16 @@ function drawSweep(){
     ctx.lineWidth = 7;
 
     ctx.beginPath();
-    ctx.moveTo(centerX,centerY);
-    ctx.lineTo(x,y);
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(x, y);
     ctx.stroke();
 
     ctx.shadowBlur = 0;
 }
 
-function drawObjects(){
+function drawObjects() {
 
-    if(distance < 100){
+    if (distance < 100) {
 
         let rad = angle * Math.PI / 180;
 
@@ -108,13 +108,13 @@ function drawObjects(){
         let objY = centerY - distance * 4 * Math.sin(rad);
 
         detections.push({
-            x:objX,
-            y:objY,
-            d:distance,
-            a:angle
+            x: objX,
+            y: objY,
+            d: distance,
+            a: angle
         });
 
-        if(detections.length > 8){
+        if (detections.length > 8) {
             detections.shift();
         }
     }
@@ -127,7 +127,7 @@ function drawObjects(){
         ctx.fillStyle = "red";
 
         ctx.beginPath();
-        ctx.arc(obj.x,obj.y,10,0,Math.PI*2);
+        ctx.arc(obj.x, obj.y, 10, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.shadowBlur = 0;
@@ -139,11 +139,11 @@ function drawObjects(){
     });
 }
 
-async function getData(){
+async function getData() {
 
-    try{
+    try {
 
-        const response = await fetch("http://172.20.10.3/data");
+        const response = await fetch("http://YOUR_ESP32_IP/data");
 
         const data = await response.json();
 
@@ -153,7 +153,7 @@ async function getData(){
         angleText.innerHTML = angle + "°";
         distanceText.innerHTML = distance + " cm";
 
-        if(distance < 100){
+        if (distance < 100) {
 
             let li = document.createElement("li");
 
@@ -161,16 +161,16 @@ async function getData(){
 
             logList.prepend(li);
 
-            if(logList.children.length > 5){
+            if (logList.children.length > 5) {
                 logList.removeChild(logList.lastChild);
             }
         }
 
         drawRadar();
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
 }
 
-setInterval(getData,50);
+setInterval(getData, 50);
