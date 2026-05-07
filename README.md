@@ -1,36 +1,74 @@
-# ESP32 Radar Scanner
+# 🚀 ESP32 Radar Scanner
 
-A real-time **ESP32-based Radar Scanner** using an **HC-SR04 Ultrasonic Sensor** and **Servo Motor** to detect nearby objects through 180° scanning.  
-The project simulates a radar system by continuously rotating the ultrasonic sensor and measuring object distance in real time.
+A futuristic **ESP32-based Radar Scanner** using an **HC-SR04 Ultrasonic Sensor**, **Servo Motor**, and a **real-time military-style web dashboard** for live object detection and radar visualization.
 
----
-
-## Features
-
-- 180° radar-style scanning
-- Real-time object detection
-- Ultrasonic distance measurement
-- Servo-based directional sensing
-- Embedded systems integration
-- Serial Monitor visualization
-- ESP32-powered embedded control
+The project simulates a real radar system by continuously rotating the ultrasonic sensor and transmitting live angle and distance data over WiFi to a responsive web interface.
 
 ---
 
-## Components Used
+# 📸 Project Showcase
+
+## 🛰 Radar Dashboard
+
+<p align="center">
+  <img src="images/radar_ui.jpeg" width="900"/>
+</p>
+
+---
+
+## 🔧 Hardware Setup
+
+<p align="center">
+  <img src="images/project_setup.jpeg" width="700"/>
+</p>
+
+---
+
+## 🎯 Detection Demo
+
+<p align="center">
+  <img src="images/detection_demo.jpeg" width="700"/>
+</p>
+
+---
+
+## 🔌 Circuit Diagram
+
+<p align="center">
+  <img src="images/circuit_diagram.png" width="900"/>
+</p>
+
+---
+
+# ⚡ Features
+
+✅ 180° radar scanning  
+✅ Real-time object detection  
+✅ WiFi-based live monitoring  
+✅ Military-style HUD dashboard  
+✅ Radar sweep fading effect  
+✅ Red glowing target indicators  
+✅ Detection logs  
+✅ Ultrasonic distance measurement  
+✅ Servo-based directional sensing  
+✅ Embedded systems + IoT integration  
+
+---
+
+# 🛠 Components Used
 
 | Component | Quantity |
 |---|---|
 | ESP32 Dev Board | 1 |
 | HC-SR04 Ultrasonic Sensor | 1 |
-| Servo Motor (SG90/MG90S) | 1 |
+| SG90 Servo Motor | 1 |
 | LED | 1 |
 | Jumper Wires | As required |
 | Breadboard | 1 |
 
 ---
 
-## Circuit Connections
+# 🔌 Circuit Connections
 
 | ESP32 Pin | Component |
 |---|---|
@@ -43,156 +81,191 @@ The project simulates a radar system by continuously rotating the ultrasonic sen
 
 ---
 
-## Working Principle
+# 🌐 System Architecture
 
-1. The servo motor rotates from **0° to 180°**.
-2. At each angle, the ultrasonic sensor measures distance.
-3. The ESP32 processes the readings in real time.
-4. Objects within range are detected and displayed through serial output.
-5. The LED can indicate nearby object presence.
-
----
-
-## Technologies Used
-
-- ESP32
-- Embedded C/C++
-- Arduino IDE
-- HC-SR04 Ultrasonic Sensor
-- Servo Motor Control
-- Sensor Interfacing
+```text
+HC-SR04 Sensor
+        ↓
+ESP32 Processes Distance Data
+        ↓
+Servo Rotates Radar
+        ↓
+ESP32 Creates JSON API
+        ↓
+Website Fetches Live Data
+        ↓
+Radar HUD Displays Objects
+```
 
 ---
 
-## Project Structure
+# 📂 Project Structure
 
-```bash
+```text
 ESP32-Radar-Scanner/
 │
-├── images/
-│   ├── radar1.jpg
-│   ├── radar2.jpg
-│   └── radar3.jpg
+├── esp32_firmware/
+│   └── esp32_radar_scanner.ino
 │
-├── ESP32_Radar.ino
+├── website/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+│
+├── images/
+│   ├── project_setup.jpeg
+│   ├── radar_ui.jpeg
+│   ├── detection_demo.jpeg
+│   ├── serial_monitor.jpeg
+│   └── circuit_diagram.png
+│
 ├── README.md
-└── circuit_diagram.png
+└── LICENSE
 ```
 
 ---
 
-## Preview
+# 🧠 Working Principle
 
-<p align="center">
-  <img src="images/radar1.jpg" width="600"/>
-</p>
-
-<p align="center">
-  <img src="images/radar2.jpg" width="600"/>
-</p>
-
-<p align="center">
-  <img src="images/radar3.jpg" width="600"/>
-</p>
+1. The servo motor rotates from **15° to 165°** continuously.
+2. At each angle, the HC-SR04 sensor measures object distance.
+3. ESP32 processes angle + distance values in real time.
+4. ESP32 hosts a live JSON API over WiFi.
+5. The website fetches radar data continuously.
+6. JavaScript updates the radar dashboard dynamically.
+7. Nearby objects appear as glowing red targets on the HUD interface.
 
 ---
 
-## Code
+# 📡 API Response
+
+```json
+{
+  "angle": 53,
+  "distance": 28
+}
+```
+
+---
+
+# 💻 Technologies Used
+
+| Layer | Technology |
+|---|---|
+| Embedded | Arduino C++ |
+| Microcontroller | ESP32 |
+| Networking | WiFi HTTP |
+| Frontend | HTML/CSS/JavaScript |
+| Visualization | Canvas API |
+| IDE | Arduino IDE + VS Code |
+
+---
+
+# 🚀 Installation & Setup
+
+## 1️⃣ Upload ESP32 Firmware
+
+Open:
+
+```text
+esp32_firmware/esp32_radar_scanner.ino
+```
+
+in Arduino IDE.
+
+Install library:
+
+```text
+ESP32Servo
+```
+
+Update WiFi credentials:
 
 ```cpp
-#include <ESP32Servo.h>
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
+```
 
-const int trigPin = 5;
-const int echoPin = 18;
-const int ledPin = 19;
-const int servoPin = 23;
+Upload code to ESP32.
 
-long duration;
-int distance;
+---
 
-Servo myServo;
+## 2️⃣ Get ESP32 IP Address
 
-void setup() {
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  pinMode(ledPin, OUTPUT);
+Open Serial Monitor:
 
-  Serial.begin(115200);
+```text
+115200 baud
+```
 
-  myServo.attach(servoPin, 500, 2400);
-}
+You’ll see:
 
-void loop() {
-
-  for (int angle = 0; angle <= 180; angle++) {
-
-    myServo.write(angle);
-
-    delay(15);
-
-    digitalWrite(trigPin, LOW);
-    delayMicroseconds(2);
-
-    digitalWrite(trigPin, HIGH);
-    delayMicroseconds(10);
-
-    digitalWrite(trigPin, LOW);
-
-    duration = pulseIn(echoPin, HIGH);
-
-    distance = duration * 0.034 / 2;
-
-    Serial.print("Angle: ");
-    Serial.print(angle);
-
-    Serial.print(" | Distance: ");
-    Serial.print(distance);
-    Serial.println(" cm");
-
-    if (distance < 20) {
-      digitalWrite(ledPin, HIGH);
-    } else {
-      digitalWrite(ledPin, LOW);
-    }
-  }
-
-  for (int angle = 180; angle >= 0; angle--) {
-
-    myServo.write(angle);
-
-    delay(15);
-
-    digitalWrite(trigPin, LOW);
-    delayMicroseconds(2);
-
-    digitalWrite(trigPin, HIGH);
-    delayMicroseconds(10);
-
-    digitalWrite(trigPin, LOW);
-
-    duration = pulseIn(echoPin, HIGH);
-
-    distance = duration * 0.034 / 2;
-
-    Serial.print("Angle: ");
-    Serial.print(angle);
-
-    Serial.print(" | Distance: ");
-    Serial.print(distance);
-    Serial.println(" cm");
-
-    if (distance < 20) {
-      digitalWrite(ledPin, HIGH);
-    } else {
-      digitalWrite(ledPin, LOW);
-    }
-  }
-}
+```text
+WiFi Connected
+ESP32 IP Address: 192.168.X.X
 ```
 
 ---
 
-## Applications
+## 3️⃣ Configure Website
+
+Inside:
+
+```text
+website/script.js
+```
+
+Replace:
+
+```javascript
+fetch("http://YOUR_ESP32_IP/data")
+```
+
+with your ESP32 IP.
+
+Example:
+
+```javascript
+fetch("http://192.168.1.5/data")
+```
+
+---
+
+## 4️⃣ Run Website
+
+Open `website` folder in VS Code.
+
+Install extension:
+
+```text
+Live Server
+```
+
+Right click:
+
+```text
+index.html
+```
+
+→ Open with Live Server
+
+---
+
+# 🔥 Future Improvements
+
+- ESP32-CAM integration
+- AI object classification
+- OLED radar visualization
+- Cloud dashboard
+- MQTT communication
+- WebSocket streaming
+- Mobile app monitoring
+- Voice alerts
+- 3D radar visualization
+
+---
+
+# 🏆 Applications
 
 - Obstacle detection systems
 - Robotics navigation
@@ -200,30 +273,22 @@ void loop() {
 - Radar simulation projects
 - Embedded systems learning
 - IoT prototyping
+- Real-time visualization systems
 
 ---
 
-## Future Improvements
+# 👨‍💻 Author
 
-- OLED radar visualization
-- Web dashboard integration
-- WiFi-based monitoring
-- Real radar-style graphical interface
-- Buzzer alerts
-- Mobile app connectivity
+## Dipaditya Roy
 
----
+ECE Student | Embedded Systems & IoT Enthusiast
 
-## Author
+### Connect with me
 
-### Dipaditya Roy
-
-ECE Student | Embedded Systems & Digital Logic Enthusiast
-
-- GitHub: https://github.com/roysempai
+- GitHub: [roysempai](https://github.com/roysempai?utm_source=chatgpt.com)
 
 ---
 
-## License
+# 📜 License
 
 This project is open-source and available under the MIT License.
