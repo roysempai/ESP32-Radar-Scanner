@@ -1,289 +1,229 @@
-# 🚀 ESP32 Radar Scanner
+# ESP32 Radar Scanner
 
-A futuristic military-style radar scanner built using ESP32, HC-SR04 ultrasonic sensor, servo motor, and a real-time web dashboard.
-
-This project combines:
-
-- Embedded Systems
-- IoT
-- Real-Time Data Visualization
-- Web Development
-- Sensor Interfacing
-
-The ESP32 scans surroundings using an ultrasonic sensor mounted on a servo motor and transmits live radar data to a futuristic HUD-style web interface over WiFi.
+A real-time **ESP32-based Radar Scanner** using an **HC-SR04 Ultrasonic Sensor** and **Servo Motor** to detect nearby objects through 180° scanning.  
+The project simulates a radar system by continuously rotating the ultrasonic sensor and measuring object distance in real time.
 
 ---
 
-# 📸 Project Showcase
+## Features
 
-## 🛰 Radar Dashboard
-
-![Radar UI](images/radar_ui.jpeg)
-
----
-
-## 🔧 Hardware Setup
-
-![Project Setup](images/project_setup.jpeg)
+- 180° radar-style scanning
+- Real-time object detection
+- Ultrasonic distance measurement
+- Servo-based directional sensing
+- Embedded systems integration
+- Serial Monitor visualization
+- ESP32-powered embedded control
 
 ---
 
-## 🎯 Detection Demo
-
-![Detection Demo](images/detection_demo.jpeg)
-
----
-
-## 🔌 Circuit Diagram
-
-![Circuit Diagram](images/circuit_diagram.png)
-
----
-
-# ⚡ Features
-
-✅ Real-time radar scanning  
-✅ WiFi-based live monitoring  
-✅ Futuristic military HUD interface  
-✅ Servo-based 180° scanning  
-✅ Ultrasonic object detection  
-✅ Red glowing target indicators  
-✅ Detection logs  
-✅ Radar sweep fading effect  
-✅ Distance labels  
-✅ Responsive web dashboard  
-
----
-
-# 🛠 Hardware Components
+## Components Used
 
 | Component | Quantity |
 |---|---|
 | ESP32 Dev Board | 1 |
 | HC-SR04 Ultrasonic Sensor | 1 |
-| SG90 Servo Motor | 1 |
+| Servo Motor (SG90/MG90S) | 1 |
 | LED | 1 |
+| Jumper Wires | As required |
 | Breadboard | 1 |
-| Jumper Wires | Multiple |
 
 ---
 
-# 🔌 Pin Connections
+## Circuit Connections
 
-| Component | ESP32 Pin |
+| ESP32 Pin | Component |
 |---|---|
-| HC-SR04 Trig | GPIO 5 |
-| HC-SR04 Echo | GPIO 18 |
-| Servo Signal | GPIO 23 |
-| LED | GPIO 19 |
-| VCC | 5V |
-| GND | GND |
+| GPIO 5 | Ultrasonic Trigger |
+| GPIO 18 | Ultrasonic Echo |
+| GPIO 19 | LED |
+| GPIO 23 | Servo Signal |
+| 5V | Servo + Ultrasonic VCC |
+| GND | Common Ground |
 
 ---
 
-# 🌐 System Architecture
+## Working Principle
 
-```text
-HC-SR04 Sensor
-        ↓
-ESP32 Processes Distance Data
-        ↓
-Servo Rotates Radar
-        ↓
-ESP32 Hosts JSON API
-        ↓
-Website Fetches Live Data
-        ↓
-Radar UI Displays Objects
-```
+1. The servo motor rotates from **0° to 180°**.
+2. At each angle, the ultrasonic sensor measures distance.
+3. The ESP32 processes the readings in real time.
+4. Objects within range are detected and displayed through serial output.
+5. The LED can indicate nearby object presence.
 
 ---
 
-# 📂 Project Structure
+## Technologies Used
 
-```text
+- ESP32
+- Embedded C/C++
+- Arduino IDE
+- HC-SR04 Ultrasonic Sensor
+- Servo Motor Control
+- Sensor Interfacing
+
+---
+
+## Project Structure
+
+```bash
 ESP32-Radar-Scanner/
 │
-├── esp32_firmware/
-│   └── esp32_radar_scanner.ino
-│
-├── website/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-│
 ├── images/
-│   ├── project_setup.jpeg
-│   ├── radar_ui.jpeg
-│   ├── detection_demo.jpeg
-│   └── circuit_diagram.png
+│   ├── radar1.jpg
+│   ├── radar2.jpg
+│   └── radar3.jpg
 │
-└── README.md
+├── ESP32_Radar.ino
+├── README.md
+└── circuit_diagram.png
 ```
 
 ---
 
-# 🧠 How It Works
+## Preview
 
-1. Servo motor rotates the ultrasonic sensor.
-2. HC-SR04 measures object distance.
-3. ESP32 processes angle + distance values.
-4. ESP32 exposes radar data through a JSON API.
-5. Website fetches data continuously.
-6. Radar dashboard displays real-time object tracking.
+<p align="center">
+  <img src="images/radar1.jpg" width="600"/>
+</p>
+
+<p align="center">
+  <img src="images/radar2.jpg" width="600"/>
+</p>
+
+<p align="center">
+  <img src="images/radar3.jpg" width="600"/>
+</p>
 
 ---
 
-# 📡 API Response
+## Code
 
-```json
-{
-  "angle": 53,
-  "distance": 28
+```cpp
+#include <ESP32Servo.h>
+
+const int trigPin = 5;
+const int echoPin = 18;
+const int ledPin = 19;
+const int servoPin = 23;
+
+long duration;
+int distance;
+
+Servo myServo;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+
+  Serial.begin(115200);
+
+  myServo.attach(servoPin, 500, 2400);
+}
+
+void loop() {
+
+  for (int angle = 0; angle <= 180; angle++) {
+
+    myServo.write(angle);
+
+    delay(15);
+
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+
+    digitalWrite(trigPin, LOW);
+
+    duration = pulseIn(echoPin, HIGH);
+
+    distance = duration * 0.034 / 2;
+
+    Serial.print("Angle: ");
+    Serial.print(angle);
+
+    Serial.print(" | Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+
+    if (distance < 20) {
+      digitalWrite(ledPin, HIGH);
+    } else {
+      digitalWrite(ledPin, LOW);
+    }
+  }
+
+  for (int angle = 180; angle >= 0; angle--) {
+
+    myServo.write(angle);
+
+    delay(15);
+
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+
+    digitalWrite(trigPin, LOW);
+
+    duration = pulseIn(echoPin, HIGH);
+
+    distance = duration * 0.034 / 2;
+
+    Serial.print("Angle: ");
+    Serial.print(angle);
+
+    Serial.print(" | Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+
+    if (distance < 20) {
+      digitalWrite(ledPin, HIGH);
+    } else {
+      digitalWrite(ledPin, LOW);
+    }
+  }
 }
 ```
 
 ---
 
-# 💻 Technologies Used
+## Applications
 
-| Layer | Technology |
-|---|---|
-| Embedded | Arduino C++ |
-| Microcontroller | ESP32 |
-| Networking | WiFi HTTP |
-| Frontend | HTML/CSS/JavaScript |
-| Visualization | Canvas API |
-| IDE | Arduino IDE + VS Code |
+- Obstacle detection systems
+- Robotics navigation
+- Smart surveillance systems
+- Radar simulation projects
+- Embedded systems learning
+- IoT prototyping
 
 ---
 
-# 🚀 Installation & Setup
+## Future Improvements
 
-## 1️⃣ Upload ESP32 Firmware
-
-Open:
-
-```text
-esp32_firmware/esp32_radar_scanner.ino
-```
-
-in Arduino IDE.
-
-Install library:
-
-```text
-ESP32Servo
-```
-
-Update WiFi credentials:
-
-```cpp
-const char* ssid = "YOUR_WIFI_NAME";
-const char* password = "YOUR_WIFI_PASSWORD";
-```
-
-Upload code to ESP32.
+- OLED radar visualization
+- Web dashboard integration
+- WiFi-based monitoring
+- Real radar-style graphical interface
+- Buzzer alerts
+- Mobile app connectivity
 
 ---
 
-## 2️⃣ Get ESP32 IP Address
+## Author
 
-Open Serial Monitor:
+### Dipaditya Roy
 
-```text
-115200 baud
-```
+ECE Student | Embedded Systems & Digital Logic Enthusiast
 
-You’ll see:
-
-```text
-WiFi Connected
-ESP32 IP Address: 192.168.X.X
-```
+- GitHub: https://github.com/roysempai
 
 ---
 
-## 3️⃣ Configure Website
+## License
 
-Inside:
-
-```text
-website/script.js
-```
-
-Replace:
-
-```javascript
-fetch("http://YOUR_ESP32_IP/data")
-```
-
-with your ESP32 IP.
-
-Example:
-
-```javascript
-fetch("http://192.168.1.5/data")
-```
-
----
-
-## 4️⃣ Run Website
-
-Open `website` folder in VS Code.
-
-Install extension:
-
-```text
-Live Server
-```
-
-Right click:
-
-```text
-index.html
-```
-
-→ Open with Live Server
-
----
-
-# 🔥 Future Improvements
-
-- ESP32-CAM integration
-- AI object classification
-- Cloud dashboard
-- MQTT communication
-- Mobile app control
-- WebSocket real-time streaming
-- Voice alerts
-- 3D radar visualization
-
----
-
-# 🏆 Project Domains
-
-- Embedded Systems
-- IoT
-- Robotics
-- Real-Time Systems
-- Web Development
-- Sensor Interfacing
-- Visualization Systems
-
----
-
-# 👨‍💻 Author
-
-Dipaditya Roy
-
-ECE Student at SRM Institute of Science and Technology
-
-Interested in:
-- Embedded Systems
-- IoT
-- Robotics
-- VLSI
-- Real-Time Interfaces
-
----
+This project is open-source and available under the MIT License.
