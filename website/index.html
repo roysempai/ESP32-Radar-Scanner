@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ESP32 Military Radar</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="left-panel">
+
+    <div class="header-box">
+
+      <h1>ESP32 RADAR SCANNER</h1>
+
+      <p>REAL-TIME OBJECT DETECTION SYSTEM</p>
+
+    </div>
+
+    <canvas id="radarCanvas" width="900" height="650"></canvas>
+
+    <div class="bottom-panel">
+
+      <div class="card">
+
+        <h3>SIGNAL STRENGTH</h3>
+
+        <div class="bars">
+
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>SCAN MODE</h3>
+
+        <button>CONTINUOUS</button>
+
+      </div>
+
+      <div class="card">
+
+        <h3>SWEEP SPEED</h3>
+
+        <button>MEDIUM</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="sidebar">
+
+    <div class="side-card">
+
+      <h2>SYSTEM STATUS</h2>
+
+      <p class="green-dot">🟢 ACTIVE</p>
+
+    </div>
+
+    <div class="side-card">
+
+      <h2>CURRENT READINGS</h2>
+
+      <div class="reading-box">
+
+        <div>
+
+          <span>ANGLE</span>
+          <h1 id="angle">0°</h1>
+
+        </div>
+
+        <div>
+
+          <span>DISTANCE</span>
+          <h1 id="distance">0 cm</h1>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="side-card">
+
+      <h2>RANGE SCALE</h2>
+
+      <p>100 cm</p>
+      <p>75 cm</p>
+      <p>50 cm</p>
+      <p>25 cm</p>
+
+    </div>
+
+    <div class="side-card">
+
+      <h2>DETECTION LOG</h2>
+
+      <ul id="logList"></ul>
+
+    </div>
+
+    <div class="side-card">
+
+      <h2>SYSTEM INFO</h2>
+
+      <p>📶 WiFi CONNECTED</p>
+      <p>🖥 DEVICE : ESP32</p>
+      <p>🟢 STATUS : ONLINE</p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
